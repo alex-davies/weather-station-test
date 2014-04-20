@@ -1,13 +1,13 @@
 #Weather Station
 
-The weather station app is built as a traditional web app on ASP.NET MVC pulling data from OpenWeatherMap.org for the purposes of completing a coding test coding test. 
+The weather station app is built as part of a coding test. The app is a simple and traditional web app on ASP.NET MVC that pulls weather data from OpenWeatherMap.org. 
 
 ##Assumptions
 
 The design or the app and UI are based on several assumptions
- * The number of cities shown remain small
- * The cities to be shown are specific part of the app and are not user controllable (they are however configuration driven)
- * Users are more comfortable with using celsius rather than farenheit
+ * The number of cities shown will remain small
+ * The cities to be shown are not user controllable (they are however configuration driven)
+ * Metric units are preferred
 
 
 ##MVC rather than single page app
@@ -16,7 +16,7 @@ A viable appraoch would have been to use the jsonp services exposed by OpenWeath
 
 ##Infrastructure
 
-Some infrastructure classes were used from previous personal projects, including depenedency injection through StructureMap and the use of IStartupTasks.
+Some infrastructure classes were used from previous personal projects, including depenedency injection through StructureMap and the use of IStartupTasks for performing initial configuration and setup.
 
 ##Async
 
@@ -24,11 +24,13 @@ The OpenWeatherMap proxy classes make all requests using async methods, freeing 
 
 ##Caching
 
-At the moment caching is done entirely with output caches with a timeout of 5minutes. It assumed that weather will not change significantly within the 5minute period. Further improvements could include adding caching at the service level, this would prevent column sorting from being cache seperatly. 
+At the moment caching is done entirely with output caches with a timeout of 5 minutes. It is assumed that weather will not change significantly within the 5 minute period. Further improvements could include adding caching at the service level, this would prevent column sorting from being cached seperatly. 
 
 ##Tests
 
-Unit tests exist for the controller actions covering data mapping, sorting and error cases. Tests also exist for testing that the OpenWeatherMap proxy classes are requesting data from the service correctly, although these border on integration tests they are important for covering API calling and data serialization.
+Unit tests exist for the controller actions, these cover data mapping, sorting and error handling. 
+
+Tests also exist for the OpenWeatherMap proxy classes to test that the request of data from the service is performed correctly, although these border on integration tests they are important for covering API calling and data serialization.
 
 
 ##Responsive User Interface
