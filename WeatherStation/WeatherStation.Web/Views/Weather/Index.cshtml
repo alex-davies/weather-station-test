@@ -1,0 +1,166 @@
+﻿@model WeatherStation.Web.Models.WeatherViewModel
+
+@functions{
+
+    /// <summary>
+    /// Formats the latitude or longitude coordinates nicely
+    /// </summary>
+    /// <param name="coord"></param>
+    /// <param name="positiveSign"></param>
+    /// <param name="negativeSign"></param>
+    /// <returns></returns>
+    public string FormatCoord(decimal coord, string positiveSign, string negativeSign)
+    {
+        var isPositive = coord > 0;
+        var absolute = Math.Abs(coord);
+        var degrees = Math.Floor(absolute);
+        var minutes = Math.Floor((absolute - degrees) * 60);
+        var seconds = Math.Round((absolute - degrees - minutes / 60) * 3600);
+
+        return string.Format("{0}°{1}'{2}''{3}", degrees, minutes, seconds, isPositive ? positiveSign : negativeSign);
+    }
+
+    /// <summary>
+    /// The sorting class name for table headers
+    /// </summary>
+    /// <param name="sortField"></param>
+    /// <returns></returns>
+    public string SortClassName(WeatherStation.Web.Models.SortField sortBy)
+    {
+        if (Model.SortBy != sortBy)
+            return "";
+        if (Model.SortDirection == SortDirection.Ascending)
+            return "sort-icon glyphicon glyphicon-chevron-down";
+        else
+            return "sort-icon glyphicon glyphicon-chevron-up";
+    }
+
+    /// <summary>
+    /// Determines the appropriate link to sort the given field
+    /// </summary>
+    /// <param name="sortField"></param>
+    /// <returns></returns>
+    public string SortLink(WeatherStation.Web.Models.SortField sortBy)
+    {
+        //if we are not currently sorted by this field then we will do a new sort in ascending order
+        if (Model.SortBy != sortBy)
+            return Url.Action(null, new { SortBy = sortBy, SortDirection = SortDirection.Ascending });
+
+        //we are already sorted by this field, we will sort in the direction we are not already sorted in
+        var sortDirection = Model.SortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
+        return Url.Action(null, new { SortBy = sortBy, SortDirection = sortDirection });
+    }
+
+}
+
+<div class="container-fluid">
+
+    @if (!Model.AvailableCityWeathers.Any())
+    {
+        <section>
+            <div class="bs-callout bs-callout-danger">
+                <h4>Lost cities</h4>
+                <p>
+                    We seem to have lost the weather data for our cities. We will be back up and running as soon as we locate our missing cities
+                </p>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="active-background">
+
+            <section class="city-selector col-md-6">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a href="@SortLink(WeatherStation.Web.Models.SortField.City)">City <span class="@SortClassName(WeatherStation.Web.Models.SortField.City)"></span></a>
+                            </th>
+                            <th class="text-center">
+                                <a href="@SortLink(WeatherStation.Web.Models.SortField.Weather)">Weather <span class="@SortClassName(WeatherStation.Web.Models.SortField.Weather)"></span></a>
+                            </th>
+                            <th class="text-center">
+                                <a href="@SortLink(WeatherStation.Web.Models.SortField.Temperature)">Temperature <span class="@SortClassName(WeatherStation.Web.Models.SortField.Temperature)"></span></a>
+                            </th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody data-bind="foreach: cities">
+                        @foreach (var cityWeather in Model.AvailableCityWeathers)
+                        {
+                            <tr class="@(cityWeather == Model.SelectedCityWeather ? "active": "")">
+                                <td>@cityWeather.CityName</td>
+                                <td class="text-center">
+                                    @if (!string.IsNullOrWhiteSpace(cityWeather.WeatherIconUrl))
+                                    {
+                                        <img src="@cityWeather.WeatherIconUrl" alt="@cityWeather.WeatherDescription" />
+                                    }
+                                </td>
+                                <td class ="text-center">@cityWeather.Temperature.ToString("F0")&deg;C</td>
+                                <td class="text-center">
+                                    <a class="details-btn btn btn-default" href="@Url.Action(null, new {CityId = cityWeather.CityId, SortBy = Model.SortBy, SortDirection = Model.SortDirection})">Details <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+
+            @if (Model.SelectedCityWeather != null)
+            {
+                <section class="city-detail col-md-6">
+
+                    <div class="header-container container-fluid">
+
+                        <div class="title-container">
+                            <h2>@Model.SelectedCityWeather.CityName</h2>
+                            <p class="weather-description">
+                                @if (!string.IsNullOrWhiteSpace(Model.SelectedCityWeather.WeatherIconUrl))
+                                {
+                                    <img src="@Model.SelectedCityWeather.WeatherIconUrl" alt="@Model.SelectedCityWeather.WeatherDescription" />
+                                }
+                                @Model.SelectedCityWeather.WeatherDescription
+                            </p>
+                        </div>
+
+                        <div class="temp-container">
+                            <span class="temp-current">@Model.SelectedCityWeather.Temperature.ToString("F0")<span class="temp-unit">&deg;C</span></span>
+                            <span class="temp-range-container">
+                                <span class="temp-max">@Model.SelectedCityWeather.TemperatureMax.ToString("F0")</span>
+                                <span class="temp-min">@Model.SelectedCityWeather.TemperatureMin.ToString("F0")</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="detail-container container-fluid">
+
+                        <div class="row">
+                            <span class="col-md-2 info-label">Location</span>
+                            <span class="col-md-10">
+                                <span>@FormatCoord(Model.SelectedCityWeather.CityLatitude, "N","S")</span> and <span>@FormatCoord(Model.SelectedCityWeather.CityLongitude,"E","W")</span>
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <span class="col-md-2 info-label">Humidity</span>
+                            <span class="col-md-10">@(Model.SelectedCityWeather.Humidity)%</span>
+                        </div>
+
+                        <div class="row">
+                            <span class="col-md-2 info-label">Pressure</span>
+                            <span class="col-md-10">@(Model.SelectedCityWeather.AtmosphericPressure) kPa</span>
+                        </div>
+
+                    </div>
+
+
+                </section>
+            }
+        </div>
+    }
+   
+</div>
+
+      

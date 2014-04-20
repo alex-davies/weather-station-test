@@ -1,0 +1,207 @@
+﻿/* Base styles (regardless of theme) */
+.bs-callout {
+margin: 20px 0;
+padding: 15px 30px 15px 15px;
+border-left: 5px solid #eee;
+}
+.bs-callout h4 {
+margin-top: 0;
+}
+.bs-callout p:last-child {
+margin-bottom: 0;
+}
+.bs-callout code,
+.bs-callout .highlight {
+background-color: #fff;
+}
+
+/* Themes for different contexts */
+.bs-callout-danger {
+background-color: #fcf2f2;
+border-color: #d9534f;
+}
+.bs-callout-warning {
+background-color: #fefbed;
+border-color: #f0ad4e;
+}
+.bs-callout-info {
+background-color: #f0f7fd;
+border-color: #5bc0de;
+}
+
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.page-window{
+    overflow:hidden;
+}
+
+.page-slideshow{
+    overflow:hidden;
+    width:200%
+}
+
+.page {
+    float:left;
+    width:50%;
+
+    -moz-transition:1s margin;
+    -o-transition:1s margin;
+    -webkit-transition:1s margin;
+    transition:1s margin;
+}
+
+.active-background{
+    background:#F5F5F5;
+    overflow:hidden;
+    border: solid 1px #DDD;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    
+}
+
+/********************************
+    City Selector 
+********************************/
+.city-selector{
+    padding-left:0;
+}
+
+.city-selector .table {
+    background:#FFF;
+    margin-bottom:0;
+    
+}
+
+.city-selector .table tbody tr td {
+    vertical-align:middle;
+}
+
+.city-selector .table tbody tr td:last-child,
+.city-selector .table thead tr th:last-child {
+    border-right: solid 1px #DDD
+}
+
+.city-selector .table tbody tr.active td:last-child
+{
+    border-right: solid 1px #F5F5F5
+}
+
+.city-selector .active .details-btn{
+    display:none;
+}
+
+.city-selector .table thead th .sort-icon{
+    font-size:0.7em;
+}
+
+
+
+/********************************
+    City Detail 
+********************************/
+
+.city-detail{
+    padding-right:0;
+    padding-bottom:20px;
+}
+
+.city-detail .header-container{
+    overflow:hidden;
+}
+
+.city-detail .header-container .title-container{
+    float:left;
+    height:80px;
+    padding: 20px 0;
+    margin-right:20px;
+}
+
+.city-detail .header-container .title-container h2{
+    font-size:30px;
+    margin:0;
+    overflow:hidden;
+   
+}
+
+.city-detail .header-container .title-container .weather-description{
+    color:#666666;
+    text-transform:lowercase;
+    font-style:italic;
+   
+   
+}
+
+.city-detail .header-container .temp-container{
+    float:left;
+    font-size:80px;
+    
+}
+
+.city-detail .header-container .temp-container .temp-unit{
+    font-size:0.3em;
+
+    /* setting to superscript produces browser differences, using relative positioning instead*/
+    position:relative; 
+    top:-1.6em
+}
+
+.city-detail .header-container .temp-range-container{
+    font-size:0.3em;
+    margin-top:1em;
+    float:right;
+    margin-left:20px;
+}
+
+
+.city-detail .header-container .temp-current{
+    float:left;
+}
+
+.city-detail .header-container .temp-min{
+    float:left;
+    clear:left;
+    color:#0094ff;
+}
+
+.city-detail .header-container .temp-max{
+    float:left;
+    clear:left;
+    color:#ff6a00;
+}
+
+.city-detail. detail-container{
+    font-size:15px;
+
+}
+
+
+
+/********************************
+    Tablet styles - view flicks to vertical layout this will clean up unneeded padding 
+********************************/
+@media (max-width: 992px) 
+{
+    .city-selector{
+        padding-right:0;
+    }
+
+    .city-selector .table{
+        padding-right:0;
+        border-bottom: solid 1px #DDD
+    }
+
+    .city-selector .table tbody tr:not(.active) td:last-child,
+    .city-selector .table thead tr th:last-child {
+        border-right: none;
+    }
+}
